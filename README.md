@@ -1,5 +1,5 @@
 
-# Insight Invest
+# 🚀 Insight Invest
 
 AI-Powered Equity Research Analyst 
 
@@ -11,16 +11,20 @@ Insight Invest is an AI-powered equity research analyst that automates the manua
 
 ## Scope
 This software documentation describes the functionality, system architecture, and requirements of Insight Invest. The system integrates various machine learning models and APIs to automate data collection and analysis, enhancing decision-making for investors. Insight Invest will serve financial analysts, institutional investors, and researchers who require an in-depth understanding of stock market trends and company performance.
-
+ Stock price prediction using LSTM
+-  News-based sentiment integration
+-  PDF and web-based document Q&A using LLMs
+-  Semantic search and retrieval with LangChain
+- 
 
 ## Offerings
-•	AI: Artificial Intelligence\
-•	LSTM: Long Short-Term Memory (a type of recurrent neural network)\
-•	RAG: Retrieval Augmented Generation\
-•	Yahoo Finance: A financial data provider
-•	Multimodal AI: AI models that analyze multiple types of data (text, images, tables, etc.)\
-•	Risk Analysis: Evaluating potential risks associated with a financial decision\
-•	Competitor Analysis: Comparing financial and operational risks between industry rivals
+🧠	AI: Artificial Intelligence\
+📈	LSTM: Long Short-Term Memory (a type of recurrent neural network)\
+📚	RAG: Retrieval Augmented Generation\
+📊	Yahoo Finance: A financial data provider\
+🔍	Multimodal AI: AI models that analyze multiple types of data (text, images, tables, etc.)\
+📰	Risk Analysis: Evaluating potential risks associated with a financial decision\
+🧮	Competitor Analysis: Comparing financial and operational risks between industry rivals
 
 ## References
 •	IEEE 1063-2001 Standard for Software User Documentation\
@@ -29,3 +33,10 @@ This software documentation describes the functionality, system architecture, an
 •	News API Documentation\
 •	Financial Risk Assessment Models\
 •	Machine Learning in Financial Forecasting
+
+# 👥 Team Members
+Abdul Rahim\
+Arqam Ansari\
+Affan Hussain\
+Hafiz M.Abubakar\
+Jawwad Ali
