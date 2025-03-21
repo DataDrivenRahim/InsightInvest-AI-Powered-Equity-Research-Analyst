@@ -1,0 +1,209 @@
+
+from flask import Flask, render_template, request, jsonify
+import os
+# from langchain_community.document_loaders import PytxtLoader
+from langchain_experimental.text_splitter import SemanticChunker
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langchain.vectorstores import FAISS
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
+import tempfile
+import re
+
+app = Flask(__name__)
+
+# Set Google API Key (Replace with your actual API key)
+os.environ["GOOGLE_API_KEY"] = "AIzaSyBKDVPPmYIvTH1SiNdvGxHs_jUFpxAQKKA"
+
+# Predefined Queries and Headings
+query_headings = {
+   """Compare the revenue of Company 1 and Company 2 based on matching fiscal years. please dont give responce in tabular form  .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.    
+- Provide a short analysis on the revenue trend of both companies over the matched period.    
+
+If revenue figures for the required years are missing for either company, state that clearly instead of making assumptions.""" ,
+
+    """Compare the Cost of Goods Sold (COGS) of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.  
+- Clearly state the exact years being compared and extract COGS figures for those years.  
+- Provide a short analysis on the COGS trend of both companies over the matched period.  
+- Offer an investment recommendation by considering trends in COGS, revenue, and overall profitability.  
+
+If COGS figures for the required years are missing for either company, state that clearly instead of making assumptions.""" ,
+
+    """"Compare the Total Operating Expenses of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.    
+- Provide a short analysis of the trend in Total Operating Expenses for both companies over the matched period.    
+- Based on this analysis, discuss the impact of operating expenses on profitability and provide an investment recommendation.  
+
+If Total Operating Expense figures for the required years are missing for either company, state that clearly instead of making assumptions.""",
+
+"""Compare the Operating Profit (also known as Profit from Operations) of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.  
+- Provide a short analysis of the Operating Profit trend of both companies over the matched period.  
+- Compare the **Operating Profit  for both companies to assess operational efficiency.  
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If Operating Profit figures for the required years are missing for either company, state that clearly instead of making assumptions.""",
+
+"""Compare the Net Profit of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.    
+- Provide a short analysis of the Net Profit trend of both companies over the matched period.  .    
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If Net Profit figures for the required years are missing for either company, state that clearly instead of making assumptions."""  ,
+
+ """Compare the **Current Ratio** and **Quick (Acid-Test) Ratio** of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.   
+- Provide a short analysis of the **liquidity position** of both companies over the matched period.   
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If the required ratio figures for either company are missing for any years, state that clearly instead of making assumptions."""  ,
+
+"""Compare the **Debt-to-Equity Ratio** and **Interest Coverage Ratio** of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.    
+- Provide a short analysis of the **financial leverage** and **debt servicing ability** of both companies over the matched period.    
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If the required ratio figures for either company are missing for any years, state that clearly instead of making assumptions."""  ,
+
+"""Compare the **Net Profit Margin** trends of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.  .  
+- If Net Profit Margin is not explicitly available, calculate it using **(Net Profit / Revenue) × 100**.  
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If Net Profit Margin figures for the required years are missing for either company, state that clearly instead of making assumptions.""" ,
+
+"""Compare the **EPS** trends of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.  .    
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If Net Profit Margin figures for the required years are missing for either company, state that clearly instead of making assumptions.""" ,
+
+"""Compare the ROE trends of Company 1 and Company 2 based on matching fiscal years please dont give responce in tabular form .  
+
+- If Company 1 has more years of data than Company 2, only compare the most recent matching years.  
+- If Company 2 has more years of data than Company 1, limit the comparison to the available years of Company 1.  .  
+
+- Based on this analysis, provide an investment recommendation, highlighting key insights for investors.  
+
+If Net Profit Margin figures for the required years are missing for either company, state that clearly instead of making assumptions.""",
+
+ """Compare the **major cash flow risks** of Company 1 and Company 2 based on their financial reports. Not In tabular form  """,
+
+ """Compare the **major market risks** affecting Company 1 and Company 2 based on their industry and financial reports. please dont give responce in tabular form""",
+
+ """Compare the **Governance and Regulatory Risks** affecting Company 1 and Company 2 based on their financial reports and industry compliance standards.please dont give responce in tabular form  """
+}
+
+def process_txt(txt_path):
+    try:
+        file_path = "combined_text.txt"
+        with open(file_path, "r", encoding="utf-8") as file:
+            text_data = file.read()  # Read entire content of the file
+
+# Convert each text file into a Document object
+        documents = [Document(page_content=text_data)]
+
+        embedding_model = GoogleGenerativeAIEmbeddings(
+            api_key=os.environ["GOOGLE_API_KEY"],
+            model="models/embedding-001"
+        )
+
+        semantic_splitter = SemanticChunker(embedding_model)
+        chunks = semantic_splitter.split_documents(documents)
+
+        db = FAISS.from_documents(chunks, embedding_model)
+        db.save_local("faiss_index")
+
+        retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 10})
+
+        llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3, max_tokens=1000)
+
+        system_prompt = """
+                     Act as a Finance Assistant. Give answers to questions from the provided annual report. You can use images, text, and tables to answer the query. If something is not present in the annual report, just say "not present".
+
+                    {context}
+                """
+
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompt),
+                ("human", "{input}"),
+            ]
+        )
+
+        question_answer_chain = create_stuff_documents_chain(llm, prompt)
+        rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
+        return rag_chain
+
+    except Exception as e:
+        print(f"Error processing txt: {e}")
+        return None
+
+def format_answer(answer):
+    # Convert headings from **** to <h3>
+    formatted_answer = re.sub(r'\*\*(.*?)\*\*', r'<h3>\1</h3>', answer)
+    return formatted_answer
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    answers = {}
+    if request.method == 'POST':
+        if 'txt' not in request.files:
+            return render_template('index.html', error='No txt file provided.')
+
+        txt_file = request.files['txt']
+
+        if txt_file.filename == '':
+            return render_template('index.html', error='No selected file.')
+
+        if txt_file and txt_file.filename.endswith('.txt'):
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.txt') as temp_txt:
+                txt_file.save(temp_txt.name)
+                temp_txt_path = temp_txt.name
+
+            rag_chain = process_txt(temp_txt_path)
+
+            if rag_chain:
+                for query, heading in query_headings.items():
+                    response = rag_chain.invoke({"input": query})
+                    answers[heading] = format_answer(response["answer"])
+            else:
+                return render_template('Compi.html', error='Failed to process txt.')
+
+            os.unlink(temp_txt_path)
+
+        else:
+            return render_template('Compi.html', error='Invalid file type. Please upload a txt file.')
+
+    return render_template('Compi.html', answers=answers)
+  
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+

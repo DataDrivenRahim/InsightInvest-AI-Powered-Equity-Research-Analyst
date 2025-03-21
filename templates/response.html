@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Ask Your Question</h2>
+<form method="POST">
+    <div class="mb-3">
+        <textarea name="question" class="form-control" rows="3" placeholder="Type your question here..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Ask</button>
+</form>
+
+{% if chat_history %}
+<div class="mt-4">
+    <h3>Chat History</h3>
+    <ul class="list-group">
+        {% for chat in chat_history %}
+        <li class="list-group-item">
+            <strong>Q:</strong> {{ chat.question }}<br>
+            <strong>A:</strong> {{ chat.answer }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Year Project </title>
+    <link rel="stylesheet" href="/static/css/homepage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://kit.fontawesome.com/e7a1fa4eef.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+</head>    
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    AOS.init({
+    duration: 1000, // Animation duration in milliseconds
+    easing: 'ease-in-out', // Default easing for animations
+    once: true, // Whether animation should happen only once while scrolling down
+    mirror: false, // Whether elements should animate out while scrolling past them
+  });
+});
+
+</script>
+<header>
+    <nav>
+        <img src="/static/logo1.jpg" alt="" class="logo">
+        <ul>
+             <li><a href="#">Home</a></li>
+             <li><a href="#services">Services</a></li>
+             <li><a href="#about">About</a></li>
+             
+            
+        </ul>
+    </nav>
+</header> 
+<body>
+    
+    <div id="header">
+        <div class="container Herosection"data-aos="fade-up" data-aos-delay="100">
+            <div class="header-text">
+                <h1>AI Powered<br> Equity Research <br>Analyst</h1>
+                <h2> Revolutionize Equity Research with InsightInvest </h2>
+                <p>AI-Powered Insights: Faster Decisions, Smarter Investments!" 🚀"</p>
+            </div>
+            <!-- <div class="main-heading">
+                <img src="/static/css/heroside2.png" alt="">
+             </div> -->
+        </div>
+    </div>
+
+    <div id="services">
+        <div class="container servicesection">
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Services We Offer</h2>
+            <div class="services-grid">
+                <!-- Card 1 -->
+                <div class="service-card ">
+                    <i class="fa-solid fa-globe icon"></i>
+                    <h3> Comprehensive Annual Reports Insights</h3>
+                    <p>
+                        Leverage advanced analytics to extract valuable insights from annual reports. Our system processes vast financial data, highlighting key performance indicators, trends, and risk factors.
+                    </p>
+                    <ul>
+                        <li><strong>Financial Performance Analysis: </strong> Gain deep insights into revenue, profit margins, and expenses..</li>
+                        <li><strong>Key Risk Factors: </strong> Identify governance, market, and operational risks affecting the company's stability.</li>
+                    </ul>
+                    <a href="/pdfRAG" class="button">Try Now</a>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="service-card ">
+                    <i class="fa-brands fa-hacker-news icon"></i>
+                    <h3>Advanced Stock Analysis & Forecasting</h3>
+                    <p>
+                        A powerful stock analysis and prediction tool designed to help investors make data-driven decisions.
+                    </p>
+                    <ul>
+                        <li><strong>Predictive Stock Trends: </strong> Utilize historical data and machine learning models to forecast stock movements.</li>
+                        <li><strong>Technical & Fundamental Analysis: </strong> Evaluate stock performance using key financial indicators and technical patterns.</li>
+                        <li><strong>Investment Recommendations: </strong> Get strategic insights on potential investment opportunities based on market data.</li>
+                    </ul>
+                    <a href="/lstm" class="button">Try Now</a>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="service-card ">
+                    <i class="fa-brands fa-stack-exchange icon"></i>
+                    <h3>Risk Assessment for Annual Reports</h3>
+                    <p>
+                        Identify potential risks embedded in financial reports and make informed investment decisions.
+                    </p>
+                    <ul>
+                        <li><strong>Liquidity & Solvency Analysis: </strong> Assess a company's ability to meet short- and long-term obligations.</li>
+                        <li><strong>Debt & Profitability Metrics: </strong> Evaluate financial leverage, profit margins, and cost structures.</li>
+                        <li><strong>Comparative Risk Assessment: </strong> Compare risk levels across industry peers for a better investment outlook.</li>
+                    </ul>
+                    <a href="/risk" class="button">Try Now</a>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="service-card " >
+                    <i class="fa-solid fa-arrow-trend-up icon"></i>
+                    <h3>Multi-Source Stock News Aggregator</h3>
+                    <p>
+                        Stay updated with the latest stock market news and financial developments from multiple sources.
+                    </p>
+                    <ul>
+                        <li><strong>Real-Time Market Updates: </strong> Aggregates news from financial websites, analyst reports, and regulatory filings.</li>
+                        <li><strong>Sentiment Analysis: </strong> Uses AI-driven sentiment analysis to gauge market mood and potential stock impacts.</li>
+                        <li><strong>Custom Alerts: </strong> Set up personalized alerts for stock movements, regulatory updates, and earnings reports.</li>
+                    </ul>
+                    <a href="/news" class="button">Try Now</a>
+                </div>
+                <div class="service-card " >
+                    <i class="fa-solid fa-magnifying-glass-chart icon"></i>
+                    <h3>Stock Market Insights Platform</h3>
+                    <p>
+                        A dynamic web platform offering real-time stock insights, market analytics, and investment tools.
+                    </p>
+                    <ul>
+                        <li><strong>Interactive Dashboard: </strong> Access live stock data, charts, and financial metrics in a user-friendly interface.</li>
+                        <li><strong>Customizable Filters: </strong> Screen stocks based on financial ratios, industry trends, and performance indicators.</li>
+                        <li><strong>AI-Driven Reports: </strong> Generate comprehensive reports on stock performance and investment opportunities.</li>
+                    </ul>
+
+                    <a href="/web" class="button">Try Now</a>
+                </div>
+                <div class="service-card " >
+                    <i class="fa-solid fa-hexagon-nodes-bolt icon"></i>
+                    <h3>Competitive Analysis of Two Companies</h3>
+                    <p>
+                        A side-by-side comparison tool to evaluate financial and operational strengths of competing businesses.
+                    </p>
+                    <ul>
+                        <li><strong>Revenue & Profitability Comparison: </strong> Identify financial strengths and weaknesses of competitors.</li>
+                        <li><strong>Market Share & Growth Analysis: </strong> Compare key performance indicators and industry positioning.</li>
+                        <li><strong>Investment & Risk Evaluation: </strong> Get insights into which company presents a better investment opportunity.</li>
+                    </ul>
+                    <a href="/compi" class="button">Try Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- --------------------------------------------------- -->
+    
+    <div id="about">
+        <div class="container">
+            <div class="about-content"data-aos="fade-up" data-aos-delay="100">
+                <!-- <img src="/static/css/heroimg2.jpg" alt="About Us" class="about-image"> -->
+                <div class="about-text">
+                    <h1>About Us</h1>
+                
+                    <p>At InsightInvest, we revolutionize equity research analysis with AI-driven financial intelligence. Our platform utilizes advanced AI for real-time data extraction from financial sources. We provide stock news reports, risk assessments, and competitor benchmarking, enabling faster, data-backed decisions. Unlock smarter investing—powered by AI.</p>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<footer>
+    <div class="footer-container">
+        <p>&copy; 2025 InsightInvest. All Rights Reserved.</p>
+    </div>
+</footer>
+
+</html>

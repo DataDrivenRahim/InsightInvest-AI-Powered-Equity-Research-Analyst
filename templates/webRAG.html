@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Enter a Web URL for RAG</h1>
+    <form  method="POST">
+        <input type="url" name="url" class="form-control mb-3" placeholder="Enter website URL" required>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

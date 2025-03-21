@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock News Summarizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+            border: none;
+        }
+        .download-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .generate-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .summary-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Stock News Summarizer</h1>
+
+    <form action="/news" method="post">
+        <input type="text" name="ticker" placeholder="Enter Stock Ticker" required>
+        <br>
+        <button type="submit" name="action" value="download_csv" class="download-btn">📥 Download CSV</button>
+        <button type="submit" name="action" value="generate_summary" class="generate-btn">🔍 Generate Summary</button>
+    </form>
+
+    <!-- {% if summary %}
+    <div class="summary-box">
+        <h2>Summary</h2>
+        <p>{{ summary }}</p>
+    </div>
+    {% endif %} -->
+    {% if summary %}
+    <div class="summary-box">
+        <h2>Summary</h2>
+        {% set lines = summary.split('\n') %}
+        {% for line in lines %}
+            {% if line.startswith('**') and line.endswith('**') %}
+                <h3><strong>{{ line[2:-2].strip() }}</strong></h3>
+            {% else %}
+                <p>{{ line }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+   
+
+</body>
+</html>
